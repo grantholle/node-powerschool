@@ -1,10 +1,11 @@
-import { Delays, greeter } from '../src/main.js';
+import { PowerSchool } from '../src/main.js'
+import * as dotenv from 'dotenv'
 
-describe('greeter function', () => {
-  const name = 'John';
-  let hello: string;
+dotenv.config()
 
-  let timeoutSpy: jest.SpyInstance;
+describe('PowerSchool class', () => {
+  let timeoutSpy: jest.SpyInstance
+  let ps: PowerSchool
 
   // Act before assertions
   beforeAll(async () => {
@@ -13,30 +14,19 @@ describe('greeter function', () => {
     // Jest 27 now uses "modern" implementation of fake timers
     // https://jestjs.io/blog/2021/05/25/jest-27#flipping-defaults
     // https://github.com/facebook/jest/pull/5171
-    jest.useFakeTimers();
-    timeoutSpy = jest.spyOn(global, 'setTimeout');
+    jest.useFakeTimers()
+    timeoutSpy = jest.spyOn(global, 'setTimeout')
 
-    const p: Promise<string> = greeter(name);
-    jest.runOnlyPendingTimers();
-    hello = await p;
-  });
+    ps = new PowerSchool(process.env.PS_URL, process.env.PS_CLIENT_ID, process.env.PS_CLIENT_SECRET)
+    jest.runOnlyPendingTimers()
+  })
 
   // Teardown (cleanup) after assertions
   afterAll(() => {
-    timeoutSpy.mockRestore();
-  });
+    timeoutSpy.mockRestore()
+  })
 
-  // Assert if setTimeout was called properly
-  it('delays the greeting by 2 seconds', () => {
-    expect(setTimeout).toHaveBeenCalledTimes(1);
-    expect(setTimeout).toHaveBeenLastCalledWith(
-      expect.any(Function),
-      Delays.Long,
-    );
-  });
-
-  // Assert greeter result
-  it('greets a user with `Hello, {name}` message', () => {
-    expect(hello).toBe(`Hello, ${name}`);
-  });
-});
+  it('can instantiate an object', () => {
+    expect(ps).toBeInstanceOf(PowerSchool)
+  })
+})
