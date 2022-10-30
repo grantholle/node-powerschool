@@ -31,7 +31,7 @@ describe('PowerSchool class', () => {
   })
 
   it('can set auth token', async () => {
-    await ps.setToken()
+    await ps.retrieveToken()
     expect(ps.tokenSet()).toEqual(true)
   })
 })

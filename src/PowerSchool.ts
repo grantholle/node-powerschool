@@ -19,7 +19,7 @@ export class PowerSchool {
 
   public async makeRequest(url: string, method: Method, data: object): Promise<any> {
     if (!this.tokenSet()) {
-      await this.setToken()
+      await this.retrieveToken()
     }
 
     const res: AxiosResponse = await this.client({
@@ -39,7 +39,13 @@ export class PowerSchool {
     return !!this.token
   }
 
-  public async setToken(force: boolean = false): Promise<PowerSchool> {
+  public setToken(token: string): PowerSchool {
+    this.token = token
+
+    return this
+  }
+
+  public async retrieveToken(force: boolean = false): Promise<PowerSchool> {
     if (this.tokenSet() && !force) {
       return this
     }
@@ -53,8 +59,7 @@ export class PowerSchool {
         'Authorization': `Basic ${token}`,
       }
     })
-    this.token = res.data.access_token
 
-    return this
+    return this.setToken(res.data.access_token)
   }
 }
