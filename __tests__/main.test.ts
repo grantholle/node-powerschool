@@ -29,4 +29,9 @@ describe('PowerSchool class', () => {
   it('can instantiate an object', () => {
     expect(ps).toBeInstanceOf(PowerSchool)
   })
+
+  it('can set auth token', async () => {
+    await ps.setToken()
+    expect(ps.tokenSet()).toEqual(true)
+  })
 })
