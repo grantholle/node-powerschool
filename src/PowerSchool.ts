@@ -6,7 +6,7 @@ export class PowerSchoolRequestConfig {
   endpoint: string
   method: Method
   table: string
-  data: object
+  data: object = {}
   id: number
   includeProjection: boolean
   pageKey: string
@@ -149,5 +149,161 @@ export class PowerSchool {
    */
   public forId(id: number): this {
     return this.setId(id)
+  }
+
+  /**
+   * Excludes the projection parameter from the request.
+   * Some requests will error when present.
+   *
+   * @returns {this}
+   */
+  public excludeProjection(): this {
+    this.requestConfig.includeProjection = false
+
+    return this
+  }
+
+  /**
+   * @alias excludeProjection
+   */
+  public withoutProjection(): this {
+    return this.excludeProjection()
+  }
+
+  /**
+   * Sets the endpoint for the request.
+   *
+   * @param endpoint The url path to which to send the request
+   * @returns {this}
+   */
+  public setEndpoint(endpoint: string): this {
+    this.requestConfig.endpoint = endpoint
+    this.requestConfig.pageKey = endpoint.split('/').pop()
+
+    return this.excludeProjection()
+  }
+
+  /**
+   * @alias setEndpoint
+   */
+  public toEndpoint(endpoint: string): this {
+    return this.setEndpoint(endpoint)
+  }
+
+  /**
+   * @alias setEndpoint
+   */
+  public to(endpoint: string): this {
+    return this.setEndpoint(endpoint)
+  }
+
+  /**
+   * @alias setEndpoint
+   */
+  public endpoint(endpoint: string): this {
+    return this.setEndpoint(endpoint)
+  }
+
+  /**
+   * Sets the data that should be sent with the request.
+   * For GET requests, it will set query parameters.
+   * For POST and PUT/PATCH, it will be the json body.
+   *
+   * @param data The data to send with the request. The values will be cast as string
+   * @returns {this}
+   */
+  public setData(data: object): this {
+    this.requestConfig.data = this.castValuesToString(data)
+
+    return this
+  }
+
+  /**
+   * @alias setData
+   */
+  public withData(data: object): this {
+    return this.setData(data)
+  }
+
+  /**
+   * @alias setData
+   */
+  public with(data: object): this {
+    return this.setData(data)
+  }
+
+  /**
+   *
+   * @param key The key of the data object to set
+   * @param value The value for the key. Will be appriopriately cast as a string.
+   * @returns {this}
+   */
+  public setDataItem(key: string, value: any): this {
+    this.requestConfig.data[key] = this.castValuesToString(value)
+
+    return this
+  }
+
+  /**
+   * Sets the HTTP verb for the request: GET, POST, PUT, PATCH, DELETE
+   *
+   * @param method The HTTP verb to use for the request
+   * @returns {this}
+   */
+  public setMethod(method: Method): this {
+    this.requestConfig.method = method
+
+    return this
+  }
+
+  /**
+   * @alias setMethod
+   */
+  public method(method: Method): this {
+    return this.setMethod(method)
+  }
+
+  /**
+   * Sets the name of the PowerQuery. If request data is included,
+   * the request will be sent.
+   *
+   * @param name The name of the PowerQuery. Can exclude endpoint prefix (/ws/schema/query)
+   * @param data The data to include with the request. Including data will send the request automatically.
+   * @returns {this|PowerSchoolResponse}
+   */
+  public setNamedQuery(name: string, data: object = {}): this|PowerSchoolResponse {
+    this.setEndpoint(name.startsWith('/') ? name : `/ws/schema/query/${name}`)
+    this.requestConfig.pageKey = 'record'
+
+    if (Object.keys(data).length > 0) {
+      return this
+    }
+
+    return this.setMethod('post')
+  }
+
+  public castValuesToString(data: object): object {
+    const output = {}
+
+    for (const key in data) {
+      let value = data[key]
+
+      if (typeof value === 'object') {
+        output[key] = this.castValuesToString(value)
+        continue
+      }
+
+      if (typeof value === 'boolean') {
+        value = value ? '1' : '0'
+      }
+
+      if (value === null || typeof value === 'undefined') {
+        value = ''
+      }
+
+      output[key] = value.toString()
+    }
+
+    return output
   }
 }
