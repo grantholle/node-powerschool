@@ -282,6 +282,34 @@ export class PowerSchool {
     return this.setMethod('post')
   }
 
+  /**
+   * @alias setNamedQuery
+   */
+  public namedQuery(name: string, data: object = {}): this|PowerSchoolResponse {
+    return this.setNamedQuery(name, data)
+  }
+
+  /**
+   * @alias setNamedQuery
+   */
+  public powerQuery(name: string, data: object = {}): this|PowerSchoolResponse {
+    return this.setNamedQuery(name, data)
+  }
+
+  /**
+   * @alias setNamedQuery
+   */
+  public pq(name: string, data: object = {}): this|PowerSchoolResponse {
+    return this.setNamedQuery(name, data)
+  }
+
+  /**
+   * Casts certain data types to a way that PowerSchool
+   * will accept without returning an error.
+   *
+   * @param data The request data that needs to be converted.
+   * @returns {object}
+   */
   public castValuesToString(data: object): object {
     const output = {}
 
