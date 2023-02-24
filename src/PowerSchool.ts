@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse, Method } from 'axios'
+import qs from 'qs'
 import { ray } from 'node-ray'
 import { PowerSchoolResponse } from './PowerSchoolResponse.js'
 
@@ -7,6 +8,7 @@ export class PowerSchoolRequestConfig {
   method: Method
   table: string
   data: object = {}
+  params: object = {}
   id: number
   includeProjection: boolean
   pageKey: string
@@ -18,7 +20,7 @@ export class PowerSchool {
   clientSecret: string
   private token: string
   private client: AxiosInstance
-  private requestConfig: PowerSchoolRequestConfig
+  private requestConfig: PowerSchoolRequestConfig = new PowerSchoolRequestConfig
 
   constructor(url: string, clientId: string, clientSecret: string) {
     this.url = url
@@ -27,11 +29,11 @@ export class PowerSchool {
     this.client = axios.create({
       baseURL: url,
     })
-    this.freshConfig()
   }
 
-  public freshConfig(): this {
-    this.requestConfig = new PowerSchoolRequestConfig()
+  public setConfig(config: PowerSchoolRequestConfig = new PowerSchoolRequestConfig): this {
+    this.requestConfig = config
+
     return this
   }
 
@@ -50,7 +52,7 @@ export class PowerSchool {
     })
     ray(res.data)
 
-    this.freshConfig()
+    this.setConfig()
     return new PowerSchoolResponse(res.data)
   }
 
@@ -213,7 +215,7 @@ export class PowerSchool {
    * @returns {this}
    */
   public setData(data: object): this {
-    this.requestConfig.data = this.castValuesToString(data)
+    this.requestConfig.data = data
 
     return this
   }
@@ -233,13 +235,34 @@ export class PowerSchool {
   }
 
   /**
+   * Sets the url's query string parameters
+   *
+   * @param queryParams The query params that should be added as a query string to the request url
+   * @returns
+   */
+  public withQueryParams(queryParams: string|object): this {
+    this.requestConfig.params = typeof queryParams === 'string'
+      ? qs.parse(queryParams)
+      : queryParams
+
+    return this
+  }
+
+  /**
+   * @alias withQueryParams
+   */
+  public query(queryParams: string|object): this {
+    return this.withQueryParams(queryParams)
+  }
+
+  /**
    *
    * @param key The key of the data object to set
    * @param value The value for the key. Will be appriopriately cast as a string.
    * @returns {this}
    */
   public setDataItem(key: string, value: any): this {
-    this.requestConfig.data[key] = this.castValuesToString(value)
+    this.requestConfig.data[key] = value
 
     return this
   }
