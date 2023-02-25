@@ -395,6 +395,16 @@ export class PowerSchool {
   }
 
   /**
+   * Sets the query parameter for page.
+   *
+   * @param page The page number to use in the request
+   * @returns {this}
+   */
+  public page(page: number): this {
+    return this.addQueryParam('page', page)
+  }
+
+  /**
    * Casts certain data types to a way that PowerSchool
    * will accept without returning an error.
    *

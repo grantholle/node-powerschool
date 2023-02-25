@@ -17,7 +17,7 @@ Below are the features that should be included:
 - [x] Setting query expression
 - [x] Setting filter
 - [x] Setting projection
-- [ ] Setting page
+- [x] Setting page
 - [ ] Setting page size
 - [ ] Setting sort
 - [ ] Setting order
