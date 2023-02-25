@@ -14,8 +14,8 @@ Below are the features that should be included:
 - [x] Projection management
 - [x] Setting data
 - [x] Setting query params
-- [ ] Setting query expression
-- [ ] Setting filter
+- [x] Setting query expression
+- [x] Setting filter
 - [ ] Setting page
 - [ ] Setting page size
 - [ ] Setting sort

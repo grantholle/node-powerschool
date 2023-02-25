@@ -357,6 +357,23 @@ export class PowerSchool {
   }
 
   /**
+   * Adds an ad-hoc filter expression, meant to be used for PowerQueries
+   *
+   * @param expression
+   * @returns {this}
+   */
+  public adHocFilter(expression: string): this {
+    return this.addQueryParam('$q', expression)
+  }
+
+  /**
+   * @alias adHocFilter
+   */
+  public filter(expression: string): this {
+    return this.adHocFilter(expression)
+  }
+
+  /**
    * Casts certain data types to a way that PowerSchool
    * will accept without returning an error.
    *
