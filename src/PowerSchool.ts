@@ -255,6 +255,12 @@ export class PowerSchool {
     return this.withQueryParams(queryParams)
   }
 
+  public addQueryParam(key: string, value: any): this {
+    this.requestConfig.params[key] = value
+
+    return this
+  }
+
   /**
    *
    * @param key The key of the data object to set
