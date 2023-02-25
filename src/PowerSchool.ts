@@ -380,11 +380,7 @@ export class PowerSchool {
    * @returns {this}
    */
   public projection(projection: string|string[]): this {
-    const converted: string = typeof projection === 'string'
-      ? projection
-      : projection.join(',')
-
-    return this.addQueryParam('projection', converted)
+    return this.addQueryParam('projection', this.castValueToString(projection))
   }
 
   /**
@@ -415,6 +411,18 @@ export class PowerSchool {
   }
 
   /**
+   * Sets the sort query parameter value.
+   *
+   * @param columns The columns on which to sort the results
+   * @param descending Whether the order should be descending
+   * @returns {this}
+   */
+  public sort(columns: string|string[], descending: boolean = false): this {
+    return this.addQueryParam('sort', this.castValueToString(columns))
+      .addQueryParam('sortdescending', descending ? 'true' : 'false')
+  }
+
+  /**
    * Casts certain data types to a way that PowerSchool
    * will accept without returning an error.
    *
@@ -427,22 +435,30 @@ export class PowerSchool {
     for (const key in data) {
       let value = data[key]
 
-      if (typeof value === 'object') {
+      if (typeof value === 'object' && !Array.isArray(value)) {
         output[key] = this.castValuesToString(value)
         continue
       }
 
-      if (typeof value === 'boolean') {
-        value = value ? '1' : '0'
-      }
-
-      if (value === null || typeof value === 'undefined') {
-        value = ''
-      }
-
-      output[key] = value.toString()
+      output[key] = this.castValueToString(value)
     }
 
     return output
+  }
+
+  public castValueToString(value: any): string {
+    if (typeof value === 'boolean') {
+      return value ? '1' : '0'
+    }
+
+    if (value === null || typeof value === 'undefined') {
+      return ''
+    }
+
+    if (Array.isArray(value)) {
+      return value.join(',')
+    }
+
+    return String(value)
   }
 }

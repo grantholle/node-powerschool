@@ -19,7 +19,7 @@ Below are the features that should be included:
 - [x] Setting projection
 - [x] Setting page
 - [x] Setting page size
-- [ ] Setting sort
+- [x] Setting sort
 - [ ] Setting order
 - [ ] Including count
 - [ ] Including expansions
