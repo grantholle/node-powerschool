@@ -1,10 +1,43 @@
 # [WIP] Node PowerSchool API Wrapper
 
-A powerful API wrapper for PowerSchool's API.
+A powerful API wrapper for PowerSchool's API. This is a port to Node from the PHP package [grantholle/powerschool-api](https://github.com/grantholle/powerschool-api).
+
+## Backlog
+
+Below are the features that should be included:
+
+- [x] Fetching token
+- [x] Setting table
+- [x] Setting method
+- [x] Setting endpoint
+- [x] Setting ID
+- [x] Projection management
+- [x] Setting data
+- [x] Setting query params
+- [ ] Setting query expression
+- [ ] Setting filter
+- [ ] Setting page
+- [ ] Setting page size
+- [ ] Setting sort
+- [ ] Setting order
+- [ ] Including count
+- [ ] Including expansions
+- [ ] Including extensions
+- [ ] Retrieving count
+- [ ] Sending request
+- [ ] Pagination
 
 ## Getting Started
 
-This project is intended to be used with the latest Active LTS release of [Node.js][nodejs].
+Install it in your project:
+
+```bash
+npm install node-powerschool
+```
+
+## Usage
+
+Coming soon.
 
 ## Available Scripts
 
