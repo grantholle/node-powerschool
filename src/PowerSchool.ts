@@ -340,6 +340,23 @@ export class PowerSchool {
   }
 
   /**
+   * Sets the q query string paramter.
+   *
+   * @param expression The query expression
+   * @returns {this}
+   */
+  public q(expression: string): this {
+    return this.addQueryParam('q', expression)
+  }
+
+  /**
+   * @alias q
+   */
+  public queryExpression(expression: string): this {
+    return this.q(expression)
+  }
+
+  /**
    * Casts certain data types to a way that PowerSchool
    * will accept without returning an error.
    *
