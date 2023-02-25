@@ -238,7 +238,7 @@ export class PowerSchool {
    * Sets the url's query string parameters
    *
    * @param queryParams The query params that should be added as a query string to the request url
-   * @returns
+   * @returns {this}
    */
   public withQueryParams(queryParams: string|object): this {
     this.requestConfig.params = typeof queryParams === 'string'
@@ -255,6 +255,13 @@ export class PowerSchool {
     return this.withQueryParams(queryParams)
   }
 
+  /**
+   * Adds an entry to the query string.
+   *
+   * @param key The key of the param to set
+   * @param value The value of the parameter
+   * @returns {this}
+   */
   public addQueryParam(key: string, value: any): this {
     this.requestConfig.params[key] = value
 
