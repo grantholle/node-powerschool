@@ -18,7 +18,7 @@ Below are the features that should be included:
 - [x] Setting filter
 - [x] Setting projection
 - [x] Setting page
-- [ ] Setting page size
+- [x] Setting page size
 - [ ] Setting sort
 - [ ] Setting order
 - [ ] Including count

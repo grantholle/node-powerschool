@@ -405,6 +405,16 @@ export class PowerSchool {
   }
 
   /**
+   * Set the size of the results.
+   *
+   * @param size The size of the results that should be returned
+   * @returns {this}
+   */
+  public pageSize(size: number): this {
+    return this.addQueryParam('pagesize', size)
+  }
+
+  /**
    * Casts certain data types to a way that PowerSchool
    * will accept without returning an error.
    *
