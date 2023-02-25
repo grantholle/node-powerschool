@@ -374,6 +374,27 @@ export class PowerSchool {
   }
 
   /**
+   * Adds a value to the projection query string parameter.
+   *
+   * @param projection An array or string of fields to add to the projection.
+   * @returns {this}
+   */
+  public projection(projection: string|string[]): this {
+    const converted: string = typeof projection === 'string'
+      ? projection
+      : projection.join(',')
+
+    return this.addQueryParam('projection', converted)
+  }
+
+  /**
+   * @alias projection
+   */
+  public withProjection(projection: string|string[]): this {
+    return this.projection(projection)
+  }
+
+  /**
    * Casts certain data types to a way that PowerSchool
    * will accept without returning an error.
    *
