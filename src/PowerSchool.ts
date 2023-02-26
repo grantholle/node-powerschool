@@ -275,7 +275,7 @@ export class PowerSchool {
    * @returns {this}
    */
   public setDataItem(key: string, value: any): this {
-    this.requestConfig.data[key] = value
+    this.requestConfig.data[key] = this.castValueToString(value)
 
     return this
   }
@@ -447,6 +447,25 @@ export class PowerSchool {
    */
   public includeCount(include: boolean = true): this {
     return this.addQueryParam('count', String(include))
+  }
+
+  /**
+   * Sets the data version and application name.
+   *
+   * @param version The version of the data
+   * @param applicationName The application name that is checking against the version
+   * @returns {this}
+   */
+  public dataVersion(version: number, applicationName: string): this {
+    return this.setDataItem('$dataversion', version)
+      .setDataItem('$dataversion_applicationname', applicationName)
+  }
+
+  /**
+   * @alias dataVersion
+   */
+  public withDataVersion(version: number, applicationName: string): this {
+    return this.dataVersion(version, applicationName)
   }
 
   /**
