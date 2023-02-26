@@ -423,6 +423,23 @@ export class PowerSchool {
   }
 
   /**
+   * Sets the sort query parameter value.
+   *
+   * @param expression The order expression
+   * @returns {this}
+   */
+  public adHocOrder(expression: string): this {
+    return this.addQueryParam('order', expression)
+  }
+
+  /**
+   * @alias adHocOrder
+   */
+  public order(expression: string): this {
+    return this.adHocOrder(expression)
+  }
+
+  /**
    * Casts certain data types to a way that PowerSchool
    * will accept without returning an error.
    *

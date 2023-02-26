@@ -20,7 +20,7 @@ Below are the features that should be included:
 - [x] Setting page
 - [x] Setting page size
 - [x] Setting sort
-- [ ] Setting order
+- [x] Setting order
 - [ ] Including count
 - [ ] Including expansions
 - [ ] Including extensions
