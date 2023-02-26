@@ -516,6 +516,104 @@ export class PowerSchool {
     return this.extensions(extension)
   }
 
+  public getDataSubscriptionChanges(applicationName: string, version: number): Promise<PowerSchoolResponse> {
+    return this.setConfig()
+      .get(`/ws/dataversion/${applicationName}/${version}`)
+  }
+
+  // --------------------------------------------------------------------------
+  // Sending requests
+  // --------------------------------------------------------------------------
+
+  /**
+   * Sends a get request with the ability to include an endpoint.
+   *
+   * @param endpoint Optionally include the endpoint
+   * @returns {Promise<PowerSchoolResponse>}
+   */
+  public get(endpoint: string = null): Promise<PowerSchoolResponse> {
+    if (endpoint) {
+      this.endpoint(endpoint)
+    }
+
+    return this.setMethod('get')
+      .send()
+  }
+
+  /**
+   * Sends a post request to an endpoint with some data.
+   *
+   * @param endpoint The endpoint to which to send the request. Optional.
+   * @param data Data to send with the request. Optional.
+   * @returns {Promise<PowerSchoolResponse>}
+   */
+  public post(endpoint: string = null, data: object = null): Promise<PowerSchoolResponse> {
+    return this.setMethod('post')
+      .sendSugar(endpoint, data)
+  }
+
+  /**
+   * Sends a put request to an endpoint with some data.
+   *
+   * @param endpoint The endpoint to which to send the request. Optional.
+   * @param data Data to send with the request. Optional.
+   * @returns {Promise<PowerSchoolResponse>}
+   */
+  public put(endpoint: string = null, data: object = null): Promise<PowerSchoolResponse> {
+    return this.setMethod('put')
+      .sendSugar(endpoint, data)
+  }
+
+  /**
+   * Sends a path request to an endpoint with some data.
+   *
+   * @param endpoint The endpoint to which to send the request. Optional.
+   * @param data Data to send with the request. Optional.
+   * @returns {Promise<PowerSchoolResponse>}
+   */
+  public patch(endpoint: string = null, data: object = null): Promise<PowerSchoolResponse> {
+    return this.setMethod('patch')
+      .sendSugar(endpoint, data)
+  }
+
+  /**
+   * Sends a delete request with the ability to include an endpoint.
+   *
+   * @param endpoint Optionally include the endpoint
+   * @returns {Promise<PowerSchoolResponse>}
+   */
+  public delete(endpoint: string = null): Promise<PowerSchoolResponse> {
+    if (endpoint) {
+      this.endpoint(endpoint)
+    }
+
+    return this.setMethod('delete')
+      .send()
+  }
+
+  /**
+   * Sugar for setting the endpoint and data before sending a request.
+   *
+   * @param endpoint The endpoint to which to send the request. Optional.
+   * @param data Data to send with the request. Optional.
+   * @returns {Promise<PowerSchoolResponse>}
+   */
+  protected sendSugar(endpoint: string = null, data: object = null): Promise<PowerSchoolResponse> {
+    if (endpoint !== null) {
+      this.setEndpoint(endpoint)
+    }
+
+    if (data !== null) {
+      this.setData(data)
+    }
+
+    return this.send()
+  }
+
+  public async send(): Promise<PowerSchoolResponse> {
+    return new PowerSchoolResponse({})
+  }
+
   /**
    * Casts certain data types to a way that PowerSchool
    * will accept without returning an error.
