@@ -491,6 +491,29 @@ export class PowerSchool {
   public withExpansion(expansion: string): this {
     return this.expansions(expansion)
   }
+
+  /**
+   * Sets the extensions to include in the request.
+   *
+   * @param extensions The extensions ot include in the request.
+   * @returns {this}
+   */
+  public extensions(extensions: string|string[]): this {
+    return this.addQueryParam('extensions', this.castValueToString(extensions))
+  }
+
+  /**
+   * @alias extensions
+   */
+  public withExtensions(extensions: string|string[]): this {
+    return this.extensions(extensions)
+  }
+
+  /**
+   * @alias extensions
+   */
+  public withExtension(extension: string): this {
+    return this.extensions(extension)
   }
 
   /**
