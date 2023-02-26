@@ -21,7 +21,7 @@ Below are the features that should be included:
 - [x] Setting page size
 - [x] Setting sort
 - [x] Setting order
-- [ ] Including count
+- [x] Including count
 - [ ] Including expansions
 - [ ] Including extensions
 - [ ] Retrieving count

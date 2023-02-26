@@ -440,6 +440,16 @@ export class PowerSchool {
   }
 
   /**
+   * Sets the count query parameter value.
+   *
+   * @param include Whether or not to include the count in the request
+   * @returns {this}
+   */
+  public includeCount(include: boolean = true): this {
+    return this.addQueryParam('count', String(include))
+  }
+
+  /**
    * Casts certain data types to a way that PowerSchool
    * will accept without returning an error.
    *
