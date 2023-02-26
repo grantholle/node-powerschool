@@ -22,7 +22,7 @@ Below are the features that should be included:
 - [x] Setting sort
 - [x] Setting order
 - [x] Including count
-- [ ] Including expansions
+- [x] Including expansions
 - [ ] Including extensions
 - [ ] Retrieving count
 - [ ] Sending request

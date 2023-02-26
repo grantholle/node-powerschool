@@ -469,6 +469,31 @@ export class PowerSchool {
   }
 
   /**
+   * Sets the expansions to include in the request.
+   *
+   * @param expansions The expansions to be included.
+   * @returns {this}
+   */
+  public expansions(expansions: string|string[]): this {
+    return this.addQueryParam('expansions', this.castValueToString(expansions))
+  }
+
+  /**
+   * @alias expansions
+   */
+  public withExpansions(expansions: string|string[]): this {
+    return this.expansions(expansions)
+  }
+
+  /**
+   * @alias expansions
+   */
+  public withExpansion(expansion: string): this {
+    return this.expansions(expansion)
+  }
+  }
+
+  /**
    * Casts certain data types to a way that PowerSchool
    * will accept without returning an error.
    *
