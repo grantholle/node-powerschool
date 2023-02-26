@@ -464,7 +464,7 @@ export class PowerSchool {
   /**
    * @alias dataVersion
    */
-  public withDataVersion(version: number, applicationName: string): this {
+  public withDataVersion(applicationName: string, version: number): this {
     return this.dataVersion(version, applicationName)
   }
 
