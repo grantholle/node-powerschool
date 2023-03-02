@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosResponse, Method } from 'axios'
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, Method } from 'axios'
 import qs from 'qs'
 import { ray } from 'node-ray'
 import { PowerSchoolResponse } from './PowerSchoolResponse.js'
@@ -622,8 +622,33 @@ export class PowerSchool {
     return this.send()
   }
 
+  /**
+   * Sends the request to PowerSchool.
+   *
+   * @returns {Promise<PowerSchoolResponse>}
+   */
   public async send(): Promise<PowerSchoolResponse> {
-    return new PowerSchoolResponse({})
+    const res = await this.client.request(this.getAxiosRequestConfig())
+
+    return new PowerSchoolResponse(res.data)
+  }
+
+  /**
+   * Converts the internal request config
+   * to an Axios request config object.
+   *
+   * @returns {AxiosRequestConfig}
+   */
+  protected getAxiosRequestConfig(): AxiosRequestConfig {
+    return {
+      url: this.requestConfig.endpoint,
+      method: this.requestConfig.method,
+      headers: {
+        'Authorization': `Bearer: ${this.token}`,
+        'Accept': 'application/json',
+      },
+      params: this.requestConfig.params,
+    }
   }
 
   /**
