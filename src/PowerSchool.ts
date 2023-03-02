@@ -526,6 +526,18 @@ export class PowerSchool {
   // --------------------------------------------------------------------------
 
   /**
+   * Retrieves the count for the set endpoint.
+   *
+   * @returns {Promise<PowerSchoolResponse>}
+   */
+  public count(): Promise<PowerSchoolResponse> {
+    this.requestConfig.endpoint += `/count`
+    this.requestConfig.includeProjection = false
+
+    return this.get()
+  }
+
+  /**
    * Sends a get request with the ability to include an endpoint.
    *
    * @param endpoint Optionally include the endpoint

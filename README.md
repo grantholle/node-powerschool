@@ -24,7 +24,7 @@ Below are the features that should be included:
 - [x] Including count
 - [x] Including expansions
 - [x] Including extensions
-- [ ] Retrieving count
+- [x] Retrieving count
 - [ ] Sending request
 - [ ] Pagination
 
