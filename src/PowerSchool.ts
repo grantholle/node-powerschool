@@ -646,6 +646,7 @@ export class PowerSchool {
       headers: {
         'Authorization': `Bearer: ${this.token}`,
         'Accept': 'application/json',
+        'Content-Type': 'application/json',
       },
       params: this.requestConfig.params,
     }
