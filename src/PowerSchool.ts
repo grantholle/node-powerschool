@@ -1,16 +1,15 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, Method } from 'axios'
-import qs from 'qs'
-import { ray } from 'node-ray'
+import * as qs from 'qs'
 import { PowerSchoolResponse } from './PowerSchoolResponse.js'
 
 export class PowerSchoolRequestConfig {
   endpoint: string
-  method: Method
+  method: Method = 'get'
   table: string
   data: object = {}
   params: object = {}
   id: number
-  includeProjection: boolean
+  includeProjection: boolean = true
   pageKey: string
 }
 
@@ -19,8 +18,8 @@ export class PowerSchool {
   clientId: string
   clientSecret: string
   private token: string
-  private client: AxiosInstance
-  private requestConfig: PowerSchoolRequestConfig = new PowerSchoolRequestConfig
+  protected client: AxiosInstance
+  protected requestConfig: PowerSchoolRequestConfig = new PowerSchoolRequestConfig
 
   constructor(url: string, clientId: string, clientSecret: string) {
     this.url = url
@@ -35,25 +34,6 @@ export class PowerSchool {
     this.requestConfig = config
 
     return this
-  }
-
-  public async makeRequest(url: string, method: Method, data: object): Promise<PowerSchoolResponse> {
-    if (!this.tokenSet()) {
-      await this.retrieveToken()
-    }
-
-    const res: AxiosResponse = await this.client({
-      url,
-      method,
-      data,
-      headers: {
-        'Authorization': `Bearer ${this.token}`,
-      }
-    })
-    ray(res.data)
-
-    this.setConfig()
-    return new PowerSchoolResponse(res.data)
   }
 
   public tokenSet(): boolean {
@@ -96,13 +76,13 @@ export class PowerSchool {
    */
   public setTable(table: string): this {
     this.requestConfig.table = table.split('/').pop()
-    this.requestConfig.endpoint = table.startsWith('/')
+    const endpoint: string = table.startsWith('/ws/schema/table')
       ? table
       : `/ws/schema/table/${table}`
-    this.requestConfig.includeProjection = true
     this.requestConfig.pageKey = 'record'
 
-    return this
+    return this.setEndpoint(this.sanitizeEndpoint(endpoint))
+      .includeProjection()
   }
 
   /**
@@ -134,9 +114,8 @@ export class PowerSchool {
    */
   public setId(id: number): this {
     this.requestConfig.id = id
-    this.requestConfig.endpoint += `/${id}`
 
-    return this
+    return this.setEndpoint(this.requestConfig.endpoint + `/${id}`)
   }
 
   /**
@@ -172,6 +151,12 @@ export class PowerSchool {
     return this.excludeProjection()
   }
 
+  public includeProjection(): this {
+    this.requestConfig.includeProjection = true
+
+    return this
+  }
+
   /**
    * Sets the endpoint for the request.
    *
@@ -179,7 +164,7 @@ export class PowerSchool {
    * @returns {this}
    */
   public setEndpoint(endpoint: string): this {
-    this.requestConfig.endpoint = endpoint
+    this.requestConfig.endpoint = this.sanitizeEndpoint(endpoint)
     this.requestConfig.pageKey = endpoint.split('/').pop()
 
     return this.excludeProjection()
@@ -269,6 +254,7 @@ export class PowerSchool {
   }
 
   /**
+   * Sets an entry on the data object
    *
    * @param key The key of the data object to set
    * @param value The value for the key. Will be appriopriately cast as a string.
@@ -304,15 +290,18 @@ export class PowerSchool {
    * the request will be sent.
    *
    * @param name The name of the PowerQuery. Can exclude endpoint prefix (/ws/schema/query)
-   * @param data The data to include with the request. Including data will send the request automatically.
+   * @param data The data to include with the request.
    * @returns {this|PowerSchoolResponse}
    */
-  public setNamedQuery(name: string, data: object = {}): this|PowerSchoolResponse {
-    this.setEndpoint(name.startsWith('/') ? name : `/ws/schema/query/${name}`)
+  public setNamedQuery(name: string, data: object = {}): this {
+    const endpoint: string = name.startsWith('/ws/schema/query')
+      ? name
+      : `/ws/schema/query/${name}`
+    this.setEndpoint(endpoint.replace(/\/{2,}/g, '/'))
     this.requestConfig.pageKey = 'record'
 
     if (Object.keys(data).length > 0) {
-      return this
+      this.setData(data)
     }
 
     return this.setMethod('post')
@@ -321,21 +310,21 @@ export class PowerSchool {
   /**
    * @alias setNamedQuery
    */
-  public namedQuery(name: string, data: object = {}): this|PowerSchoolResponse {
+  public namedQuery(name: string, data: object = {}): this {
     return this.setNamedQuery(name, data)
   }
 
   /**
    * @alias setNamedQuery
    */
-  public powerQuery(name: string, data: object = {}): this|PowerSchoolResponse {
+  public powerQuery(name: string, data: object = {}): this {
     return this.setNamedQuery(name, data)
   }
 
   /**
    * @alias setNamedQuery
    */
-  public pq(name: string, data: object = {}): this|PowerSchoolResponse {
+  public pq(name: string, data: object = {}): this {
     return this.setNamedQuery(name, data)
   }
 
@@ -379,7 +368,7 @@ export class PowerSchool {
    * @param projection An array or string of fields to add to the projection.
    * @returns {this}
    */
-  public projection(projection: string|string[]): this {
+  public projection(projection: string|string[] = '*'): this {
     return this.addQueryParam('projection', this.castValueToString(projection))
   }
 
@@ -639,7 +628,7 @@ export class PowerSchool {
    *
    * @returns {AxiosRequestConfig}
    */
-  protected getAxiosRequestConfig(): AxiosRequestConfig {
+  public getAxiosRequestConfig(): AxiosRequestConfig {
     return {
       url: this.requestConfig.endpoint,
       method: this.requestConfig.method,
@@ -648,8 +637,26 @@ export class PowerSchool {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-      params: this.requestConfig.params,
+      params: this.buildParams(),
+      data: this.requestConfig.data,
     }
+  }
+
+  /**
+   * Builds the query parameters for Axios
+   *
+   * @returns {object}
+   */
+  public buildParams(): object {
+    return {
+      ...(this.requestConfig.includeProjection ? { projection: '*' } : {}),
+      ...(this.requestConfig.method.toLowerCase() === 'get' ? { ...this.requestConfig.data } : {}),
+      ...this.requestConfig.params,
+    }
+  }
+
+  public sanitizeEndpoint(endpoint: string): string {
+    return endpoint.replace(/\/{2,}/g, '/')
   }
 
   /**
