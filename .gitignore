@@ -18,6 +18,7 @@ build/
 
 # JetBrains IDEs
 .idea/
+.fleet/
 
 # Optional npm cache directory
 .npm
