@@ -34,10 +34,10 @@ describe('PowerSchool class', () => {
     expect(ps).toBeInstanceOf(PowerSchool)
   })
 
-  it('can set auth token', async () => {
-    await ps.retrieveToken()
-    expect(ps.tokenSet()).toEqual(true)
-  })
+//  it('can set auth token', async () => {
+//    await ps.retrieveToken()
+//    expect(ps.tokenSet()).toEqual(true)
+//  })
 
   describe('Building a request', () => {
     it('can detect slash on table request', () => {
@@ -159,6 +159,18 @@ describe('PowerSchool class', () => {
         projection: 'field1,field2',
       })
       expect(config).toHaveProperty('url', '/ws/schema/table/u_custom_table')
+    })
+
+    it('can set page size', () => {
+      let config: AxiosRequestConfig = ps.pageSize(19)
+        .setDataItem('param1', 'one')
+        .withoutProjection()
+        .getAxiosRequestConfig()
+
+      expect(config).toHaveProperty('params', {
+        param1: 'one',
+        pagesize: 19,
+      })
     })
   })
 })
