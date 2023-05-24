@@ -172,5 +172,29 @@ describe('PowerSchool class', () => {
         pagesize: 19,
       })
     })
+
+    it('can set a sort with a string', () => {
+      let config: AxiosRequestConfig = ps.method('post')
+        .sort('last_name', true)
+        .getAxiosRequestConfig()
+
+      expect(config).toHaveProperty('params', {
+        sort: 'last_name',
+        sortdescending: 'true',
+        projection: '*',
+      })
+    })
+
+    it('can set a sort with an array', () => {
+      let config: AxiosRequestConfig = ps.method('post')
+        .sort(['last_name', 'first_name'])
+        .getAxiosRequestConfig()
+
+      expect(config).toHaveProperty('params', {
+        sort: 'last_name,first_name',
+        sortdescending: 'false',
+        projection: '*',
+      })
+    })
   })
 })
