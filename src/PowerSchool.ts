@@ -9,7 +9,7 @@ export class PowerSchoolRequestConfig {
   data: object = {}
   params: object = {}
   id: number
-  includeProjection: boolean = true
+  includeProjection: boolean = false
   pageKey: string
 }
 
@@ -166,6 +166,10 @@ export class PowerSchool {
   public setEndpoint(endpoint: string): this {
     this.requestConfig.endpoint = this.sanitizeEndpoint(endpoint)
     this.requestConfig.pageKey = endpoint.split('/').pop()
+
+    if (this.requestConfig.endpoint.includes('/table/')) {
+      return this.includeProjection()
+    }
 
     return this.excludeProjection()
   }

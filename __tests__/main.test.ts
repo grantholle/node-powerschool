@@ -74,6 +74,7 @@ describe('PowerSchool class', () => {
         param1: 'one',
         param2: 'two',
         param3: 'three',
+        projection: '*',
       })
     })
 
@@ -88,6 +89,7 @@ describe('PowerSchool class', () => {
       expect(config).toHaveProperty('params', {
         param1: 'one',
         param2: 'two',
+        projection: '*',
       })
     })
 
@@ -103,6 +105,7 @@ describe('PowerSchool class', () => {
       expect(config).toHaveProperty('params', {
         param1: 'one',
         param2: 'two',
+        projection: '*',
       })
     })
 
@@ -181,7 +184,6 @@ describe('PowerSchool class', () => {
       expect(config).toHaveProperty('params', {
         sort: 'last_name',
         sortdescending: 'true',
-        projection: '*',
       })
     })
 
@@ -193,7 +195,6 @@ describe('PowerSchool class', () => {
       expect(config).toHaveProperty('params', {
         sort: 'last_name,first_name',
         sortdescending: 'false',
-        projection: '*',
       })
     })
   })
