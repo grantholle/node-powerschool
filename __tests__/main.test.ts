@@ -197,5 +197,16 @@ describe('PowerSchool class', () => {
         sortdescending: 'false',
       })
     })
+
+    it('can set page', () => {
+      let config: AxiosRequestConfig = ps.page(7)
+        .toEndpoint('/ws/v1/metadata')
+        .getAxiosRequestConfig()
+
+      expect(config).toHaveProperty('params', {
+        page: 7,
+      })
+      expect(config).toHaveProperty('method', 'get')
+    })
   })
 })
