@@ -18,8 +18,11 @@ describe('PowerSchool class', () => {
     jest.useFakeTimers()
     timeoutSpy = jest.spyOn(global, 'setTimeout')
 
-    ps = new PowerSchool(process.env.PS_URL, process.env.PS_CLIENT_ID, process.env.PS_CLIENT_SECRET)
     jest.runOnlyPendingTimers()
+  })
+
+  beforeEach(() => {
+    ps = new PowerSchool(process.env.PS_URL, process.env.PS_CLIENT_ID, process.env.PS_CLIENT_SECRET)
   })
 
   // Teardown (cleanup) after assertions
@@ -112,7 +115,7 @@ describe('PowerSchool class', () => {
     })
 
     it('can set the PowerQuery relative endpoint with data', () => {
-      let config: AxiosRequestConfig = ps.pq('com.archboard.test', {
+      let config: AxiosRequestConfig = ps.namedQuery('com.archboard.test', {
           param1: 'one',
           param2: 'two',
         })
@@ -124,6 +127,38 @@ describe('PowerSchool class', () => {
         param1: 'one',
         param2: 'two',
       })
+    })
+
+    it('can set a string projection', () => {
+      let config: AxiosRequestConfig = ps.againstTable('/u_custom_table/')
+        .with({
+          param1: 'one',
+          param2: 'two',
+        })
+        .withProjection('field1,field2')
+        .getAxiosRequestConfig()
+
+      expect(config).toHaveProperty('params', {
+        param1: 'one',
+        param2: 'two',
+        projection: 'field1,field2',
+      })
+      expect(config).toHaveProperty('url', '/ws/schema/table/u_custom_table')
+    })
+
+    it('can set projection with an array', () => {
+      let config: AxiosRequestConfig = ps.forTable('u_custom_table')
+        .withData({
+          param1: 'one',
+        })
+        .withProjection(['field1', 'field2'])
+        .getAxiosRequestConfig()
+
+      expect(config).toHaveProperty('params', {
+        param1: 'one',
+        projection: 'field1,field2',
+      })
+      expect(config).toHaveProperty('url', '/ws/schema/table/u_custom_table')
     })
   })
 })

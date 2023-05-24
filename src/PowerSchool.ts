@@ -656,7 +656,13 @@ export class PowerSchool {
   }
 
   public sanitizeEndpoint(endpoint: string): string {
-    return endpoint.replace(/\/{2,}/g, '/')
+    const sanitized = endpoint.replace(/\/{2,}/g, '/')
+
+    if (sanitized.endsWith('/')) {
+      return sanitized.slice(0, -1)
+    }
+
+    return sanitized
   }
 
   /**
