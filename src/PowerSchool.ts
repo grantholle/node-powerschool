@@ -505,6 +505,13 @@ export class PowerSchool {
     return this.extensions(extension)
   }
 
+  /**
+   * Retrieves the changes after a given version
+   *
+   * @param applicationName The name used when creating the subscription
+   * @param version The last version that was received
+   * @returns Promise<PowerSchoolResponse>
+   */
   public getDataSubscriptionChanges(applicationName: string, version: number): Promise<PowerSchoolResponse> {
     return this.setConfig()
       .get(`/ws/dataversion/${applicationName}/${version}`)
