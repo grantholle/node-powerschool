@@ -75,13 +75,12 @@ export class PowerSchool {
    * @returns {this}
    */
   public setTable(table: string): this {
-    this.requestConfig.table = table.split('/').pop()
     const endpoint: string = table.startsWith('/ws/schema/table')
       ? table
       : `/ws/schema/table/${table}`
     this.requestConfig.pageKey = 'record'
 
-    return this.setEndpoint(this.sanitizeEndpoint(endpoint))
+    return this.setEndpoint(endpoint)
       .includeProjection()
   }
 
@@ -165,9 +164,18 @@ export class PowerSchool {
    */
   public setEndpoint(endpoint: string): this {
     this.requestConfig.endpoint = this.sanitizeEndpoint(endpoint)
-    this.requestConfig.pageKey = endpoint.split('/').pop()
+    const parts = endpoint.split('/')
+    const tail = parts.pop()
+
+    if (!isNaN(Number(tail))) {
+      this.requestConfig.id = Number(tail)
+    }
 
     if (this.requestConfig.endpoint.includes('/table/')) {
+      this.requestConfig.table = this.requestConfig.id
+        ? parts[parts.length - 2]
+        : tail
+
       return this.includeProjection()
     }
 
