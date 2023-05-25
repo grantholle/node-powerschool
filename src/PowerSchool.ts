@@ -379,7 +379,7 @@ export class PowerSchool {
   /**
    * @alias adHocFilter
    */
-  public filter(expression: string): this {
+  public filter(expression: string|string[]): this {
     return this.adHocFilter(expression)
   }
 

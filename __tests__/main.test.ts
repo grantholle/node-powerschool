@@ -229,5 +229,38 @@ describe('PowerSchool class', () => {
         q: 'school_enrollment.enroll_status==P;students.studentcorefields.allergies==*peanut butter*',
       })
     })
+
+    it('can set ad hoc filter with a string', () => {
+      let config: AxiosRequestConfig = ps.filter('cc.course_number==MUSIC')
+        .getAxiosRequestConfig()
+
+      expect(config).toHaveProperty('params', {
+        $q: 'cc.course_number==MUSIC',
+      })
+    })
+
+    it('can set ad hoc filter with an array', () => {
+      let config: AxiosRequestConfig = ps.filter([
+          'students.grade_level=ge=8',
+          'students.enroll_status==0',
+          'cc.course_number==MUSIC',
+        ])
+        .getAxiosRequestConfig()
+
+      expect(config).toHaveProperty('params', {
+        $q: 'students.grade_level=ge=8;students.enroll_status==0;cc.course_number==MUSIC',
+      })
+    })
+
+    it('can set an ad hoc order', () => {
+      let config: AxiosRequestConfig = ps.order('students.last_name')
+        .filter('students.grade_level=ge=8')
+        .getAxiosRequestConfig()
+
+      expect(config).toHaveProperty('params', {
+        $q: 'students.grade_level=ge=8',
+        order: 'students.last_name',
+      })
+    })
   })
 })
