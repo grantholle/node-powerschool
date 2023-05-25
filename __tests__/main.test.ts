@@ -208,5 +208,14 @@ describe('PowerSchool class', () => {
       })
       expect(config).toHaveProperty('method', 'get')
     })
+
+    it('can set the query expression', () => {
+      let config: AxiosRequestConfig = ps.queryExpression('school_enrollment.enroll_status==P')
+        .getAxiosRequestConfig()
+
+      expect(config).toHaveProperty('params', {
+        q: 'school_enrollment.enroll_status==P',
+      })
+    })
   })
 })
