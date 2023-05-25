@@ -264,5 +264,53 @@ describe('PowerSchool class', () => {
         count: 'true',
       })
     })
+
+    it('can set expansions with a string', () => {
+      let config: AxiosRequestConfig = ps.withExpansion('phones')
+        .toEndpoint('/ws/v1/school/1/student')
+        .getAxiosRequestConfig()
+
+      expect(config).toHaveProperty('params', {
+        expansions: 'phones',
+      })
+      expect(config).toHaveProperty('method', 'get')
+      expect(config).toHaveProperty('url', '/ws/v1/school/1/student')
+    })
+
+    it('can set expansions with an array', () => {
+      let config: AxiosRequestConfig = ps.withExpansions(['phones', 'addresses'])
+        .toEndpoint('/ws/v1/school/2/student')
+        .getAxiosRequestConfig()
+
+      expect(config).toHaveProperty('params', {
+        expansions: 'phones,addresses',
+      })
+      expect(config).toHaveProperty('method', 'get')
+      expect(config).toHaveProperty('url', '/ws/v1/school/2/student')
+    })
+
+    it('can set extensions with a string', () => {
+      let config: AxiosRequestConfig = ps.withExtension('studentcorefields')
+        .toEndpoint('/ws/v1/school/1/student')
+        .getAxiosRequestConfig()
+
+      expect(config).toHaveProperty('params', {
+        extensions: 'studentcorefields',
+      })
+      expect(config).toHaveProperty('method', 'get')
+      expect(config).toHaveProperty('url', '/ws/v1/school/1/student')
+    })
+
+    it('can set extensions with an array', () => {
+      let config: AxiosRequestConfig = ps.withExtensions(['studentcorefields', 'c_studentlocator'])
+        .toEndpoint('/ws/v1/school/2/student')
+        .getAxiosRequestConfig()
+
+      expect(config).toHaveProperty('params', {
+        extensions: 'studentcorefields,c_studentlocator',
+      })
+      expect(config).toHaveProperty('method', 'get')
+      expect(config).toHaveProperty('url', '/ws/v1/school/2/student')
+    })
   })
 })
