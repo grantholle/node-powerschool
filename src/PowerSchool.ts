@@ -659,7 +659,7 @@ export class PowerSchool {
    */
   public getAxiosRequestConfig(): AxiosRequestConfig {
     return {
-      url: this.requestConfig.endpoint,
+      url: this.sanitizeEndpoint(this.requestConfig.endpoint),
       method: this.requestConfig.method,
       headers: {
         'Authorization': `Bearer: ${this.token}`,
