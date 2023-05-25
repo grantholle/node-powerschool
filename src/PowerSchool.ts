@@ -346,25 +346,34 @@ export class PowerSchool {
    * @param expression The query expression
    * @returns {this}
    */
-  public q(expression: string): this {
-    return this.addQueryParam('q', expression)
+  public q(expression: string|string[]): this {
+    const exp = Array.isArray(expression)
+      ? expression.join(';')
+      : expression
+
+    return this.addQueryParam('q', exp)
   }
 
   /**
    * @alias q
    */
-  public queryExpression(expression: string): this {
+  public queryExpression(expression: string|string[]): this {
     return this.q(expression)
   }
 
   /**
-   * Adds an ad-hoc filter expression, meant to be used for PowerQueries
+   * Adds an ad-hoc filter expression,
+   * meant to be used for PowerQueries
    *
    * @param expression
    * @returns {this}
    */
-  public adHocFilter(expression: string): this {
-    return this.addQueryParam('$q', expression)
+  public adHocFilter(expression: string|string[]): this {
+    const exp = Array.isArray(expression)
+      ? expression.join(';')
+      : expression
+
+    return this.addQueryParam('$q', exp)
   }
 
   /**

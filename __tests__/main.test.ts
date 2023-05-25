@@ -209,12 +209,24 @@ describe('PowerSchool class', () => {
       expect(config).toHaveProperty('method', 'get')
     })
 
-    it('can set the query expression', () => {
+    it('can set the query expression with a string', () => {
       let config: AxiosRequestConfig = ps.queryExpression('school_enrollment.enroll_status==P')
         .getAxiosRequestConfig()
 
       expect(config).toHaveProperty('params', {
         q: 'school_enrollment.enroll_status==P',
+      })
+    })
+
+    it('can set the query expression with an array', () => {
+      let config: AxiosRequestConfig = ps.queryExpression([
+          'school_enrollment.enroll_status==P',
+          'students.studentcorefields.allergies==*peanut butter*',
+        ])
+        .getAxiosRequestConfig()
+
+      expect(config).toHaveProperty('params', {
+        q: 'school_enrollment.enroll_status==P;students.studentcorefields.allergies==*peanut butter*',
       })
     })
   })
