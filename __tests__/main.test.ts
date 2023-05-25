@@ -252,14 +252,16 @@ describe('PowerSchool class', () => {
       })
     })
 
-    it('can set an ad hoc order', () => {
+    it('can set an ad hoc order with count', () => {
       let config: AxiosRequestConfig = ps.order('students.last_name')
         .filter('students.grade_level=ge=8')
+        .includeCount()
         .getAxiosRequestConfig()
 
       expect(config).toHaveProperty('params', {
         $q: 'students.grade_level=ge=8',
         order: 'students.last_name',
+        count: 'true',
       })
     })
   })

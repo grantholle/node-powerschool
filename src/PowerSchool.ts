@@ -451,12 +451,13 @@ export class PowerSchool {
 
   /**
    * Sets the count query parameter value.
+   * This will include the total number of records
+   * for the query in the response
    *
-   * @param include Whether or not to include the count in the request
    * @returns {this}
    */
-  public includeCount(include: boolean = true): this {
-    return this.addQueryParam('count', String(include))
+  public includeCount(): this {
+    return this.addQueryParam('count', 'true')
   }
 
   /**
